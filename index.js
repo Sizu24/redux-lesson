@@ -159,53 +159,56 @@ function goals(state =[], action) {
 /* This invokes both of the other reducers, which return their specific portions of state, and returns an object with the state of goals and state of todos
   Now only one reducer that is used for taking in the other 2 other reducers, since createStore only takes in one reducer.
 */
-function app(state = {}, action) {
-  return {
-    todos: todos(state.todos, action),
-    goals: goals(state.goals, action),
-  }
-}
+// function app(state = {}, action) {
+//   return {
+//     todos: todos(state.todos, action),
+//     goals: goals(state.goals, action),
+//   }
+// }
 
 
 
 // Library Code
-function createStore(reducer) {
-  // Manage state
-  // Get state (provide API or a way to get the state)
-  // Listen to changes on state
-  // Update the state
+// function createStore(reducer) {
+//   // Manage state
+//   // Get state (provide API or a way to get the state)
+//   // Listen to changes on state
+//   // Update the state
 
-  let state;
-  let listeners = [];
+//   let state;
+//   let listeners = [];
 
-  const getState = () => state;
+//   const getState = () => state;
 
-  const subscribe = (listener) => {
-    listeners.push(listener);
-    return () => {
-      listeners = listener.filter((l) => l !== listener);
-    }
-  };
+//   const subscribe = (listener) => {
+//     listeners.push(listener);
+//     return () => {
+//       listeners = listener.filter((l) => l !== listener);
+//     }
+//   };
 
-  // This updates the state
-  const dispatch = (action) => {
-    state = reducer(state, action);
-    listeners.forEach((listener) => {
-      listener();
-    });
-  };
+//   // This updates the state
+//   const dispatch = (action) => {
+//     state = reducer(state, action);
+//     listeners.forEach((listener) => {
+//       listener();
+//     });
+//   };
 
-  // When createStore is invoked, we return an object for the getState function
-  return {
-    getState,
-    subscribe,
-    dispatch,
-  };
-}
+//   // When createStore is invoked, we return an object for the getState function
+//   return {
+//     getState,
+//     subscribe,
+//     dispatch,
+//   };
+// }
 
 
-
-const store = createStore(app);
+// const store = createStore(app);
+const store = Redux.createStore(Redux.combineReducers({
+  todos, // This knows that you want a todos property in the state
+  goals,
+}));
 
 store.subscribe(() => {
   // This gets the current state for each 
