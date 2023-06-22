@@ -203,12 +203,52 @@ function goals(state =[], action) {
 //   };
 // }
 
+// Middleware regular version:
+// function checker(store) {
+//   // next is going to be the next middleware in line if there is more than one, or it's goind to be dispatch.
+//   return function (next) {
+//     return function (action) {
+//       if (action.type === ADD_TODO && action.todo.name.toLowerCase().includes('bitcoin')) {
+//         return alert("Nope that's a bad idea");
+//       }
+    
+//       if (action.type === ADD_GOAL && action.goal.name.toLowerCase().includes('bitcoin')) {
+//         return alert("Nope that's a bad idea");
+//       }
+    
+//       // This will be either the next middleware in line, or dispatch.
+//       return next(action);
+//     }
+//   } 
+// }
 
+// Middleware ES6 version:
+const checker = (store) => (next) => (action) => {
+  if (action.type === ADD_TODO && action.todo.name.toLowerCase().includes('bitcoin')) {
+    return alert("Nope that's a bad idea");
+  }
+  
+  if (action.type === ADD_GOAL && action.goal.name.toLowerCase().includes('bitcoin')) {
+    return alert("Nope that's a bad idea");
+  }
+    
+  // This will be either the next middleware in line, or dispatch.
+  return next(action);
+}
+
+const logger = (store) => (next) => (action) => {
+  console.group(action.type);
+    console.log('The action', action);
+    const result = next(action);
+    console.log('The new state', store.getState());
+  console.groupEnd();
+  return result;
+}
 // const store = createStore(app);
 const store = Redux.createStore(Redux.combineReducers({
   todos, // This knows that you want a todos property in the state
   goals,
-}));
+}), Redux.applyMiddleware(checker, logger));
 
 store.subscribe(() => {
   // This gets the current state for each 
